@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Open Source Value Map</title>
+<style>
+  :root{
+    --bg:#FBFBFD;
+    --surface:#FFFFFF;
+    --surface-2:#F5F5F7;
+    --ink:#1D1D1F;
+    --ink-2:#6E6E73;
+    --ink-3:#8E8E93;
+    --hairline:rgba(0,0,0,0.09);
+    --hairline-2:rgba(0,0,0,0.045);
+    --open:#13A05C;        /* open foundation */
+    --open-soft:#E6F6EE;
+    --captured:#0B4DA2;    /* concentrated value */
+    --captured-soft:#E7EFFA;
+    --link:#0071E3;
+    --shadow:0 1px 2px rgba(0,0,0,.04),0 8px 28px rgba(0,0,0,.06);
+    --shadow-lg:0 2px 6px rgba(0,0,0,.05),0 22px 60px rgba(0,0,0,.10);
+    --font:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Inter","Helvetica Neue",Arial,sans-serif;
+    --mono:ui-monospace,"SF Mono","SFMono-Regular",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:var(--font);
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+    line-height:1.5;letter-spacing:-0.011em;
+  }
+  .wrap{max-width:1120px;margin:0 auto;padding:0 28px}
+
+  /* ---------- top bar ---------- */
+  .bar{
+    position:sticky;top:0;z-index:50;
+    backdrop-filter:saturate(180%) blur(20px);
+    -webkit-backdrop-filter:saturate(180%) blur(20px);
+    background:rgba(251,251,253,.78);
+    border-bottom:1px solid var(--hairline-2);
+  }
+  .bar-in{display:flex;align-items:center;justify-content:space-between;height:52px}
+  .brand{display:flex;align-items:center;gap:11px;font-weight:600;font-size:15px;letter-spacing:-0.02em}
+  .brand .dot{width:22px;height:10px;border-radius:6px;background:linear-gradient(90deg,var(--open),var(--captured))}
+  .bar-legend{display:flex;gap:18px;font-size:12.5px;color:var(--ink-2)}
+  .bar-legend span{display:inline-flex;align-items:center;gap:7px}
+  .swatch{width:9px;height:9px;border-radius:50%}
+  .swatch.o{background:var(--open)}
+  .swatch.c{background:var(--captured)}
+  .bar-right{display:flex;align-items:center;gap:18px}
+  .bar-contact{display:flex;align-items:center;gap:8px}
+  .cbtn{
+    display:inline-flex;align-items:center;gap:7px;
+    height:30px;padding:0 13px;border-radius:999px;
+    font-size:12.5px;font-weight:550;letter-spacing:-0.01em;
+    color:var(--ink-1);text-decoration:none;
+    background:rgba(0,0,0,.04);border:1px solid var(--hairline-2);
+    transition:background .18s ease,border-color .18s ease,transform .18s ease;
+  }
+  .cbtn:hover{background:rgba(0,0,0,.07);border-color:var(--hairline-1)}
+  .cbtn:active{transform:scale(.97)}
+  .cbtn:focus-visible{outline:2px solid var(--captured);outline-offset:2px}
+  .cbtn svg{width:14px;height:14px;display:block}
+  .cbtn .cbtn-label{white-space:nowrap}
+  @media(max-width:680px){.bar-legend{display:none};.cbtn .cbtn-label{display:none};.cbtn{padding:0 10px}}
+
+  /* ---------- hero ---------- */
+  .hero{padding:96px 0 60px;position:relative}
+  .eyebrow{
+    font-family:var(--mono);font-size:12px;letter-spacing:.04em;color:var(--open);
+    font-weight:600;text-transform:uppercase;margin:0 0 22px
+  }
+  h1.title{
+    font-size:clamp(40px,6.4vw,76px);line-height:1.02;letter-spacing:-0.035em;
+    font-weight:700;margin:0 0 26px;max-width:18ch
+  }
+  h1.title em{font-style:normal;background:linear-gradient(96deg,var(--open) 8%,var(--captured) 92%);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .lede{font-size:clamp(18px,2.1vw,22px);line-height:1.45;color:var(--ink-2);max-width:62ch;margin:0 0 40px;font-weight:400}
+  .lede b{color:var(--ink);font-weight:600}
+
+  /* hero flow animation */
+  .flow{width:100%;height:128px;margin:8px 0 0;display:block}
+  .flow-track{fill:none;stroke:url(#grad);stroke-width:2.4}
+  .flow-dash{fill:none;stroke:url(#grad);stroke-width:2.4;stroke-dasharray:5 16;stroke-linecap:round;animation:dash 2.6s linear infinite}
+  @keyframes dash{to{stroke-dashoffset:-42}}
+  .flow-node{transition:r .3s}
+  .pulse{animation:pulse 3s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:.5;transform:scale(1)}50%{opacity:1;transform:scale(1.18)}}
+  .flow-cap{font-family:var(--mono);font-size:11px;fill:var(--ink-3);letter-spacing:.02em}
+
+  /* ---------- marquee stats ---------- */
+  .stats{border-top:1px solid var(--hairline);border-bottom:1px solid var(--hairline);padding:34px 0;margin-top:36px}
+  .stats-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:24px}
+  .stat .n{font-size:clamp(26px,3.2vw,40px);font-weight:700;letter-spacing:-0.03em;line-height:1}
+  .stat .n.blue{color:var(--captured)}
+  .stat .k{font-size:12.5px;color:var(--ink-2);margin-top:9px;line-height:1.35}
+  .stat .src{font-family:var(--mono);font-size:10px;color:var(--ink-3);margin-top:5px;letter-spacing:.02em}
+  @media(max-width:880px){.stats-grid{grid-template-columns:repeat(2,1fr);gap:28px}}
+  @media(max-width:420px){.stats-grid{grid-template-columns:1fr 1fr}}
+
+  /* ---------- section frame ---------- */
+  section.block{padding:72px 0}
+  .kicker{font-family:var(--mono);font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-3);font-weight:600;margin:0 0 14px}
+  h2{font-size:clamp(28px,3.6vw,40px);letter-spacing:-0.03em;font-weight:700;margin:0 0 16px;line-height:1.08}
+  .section-lede{font-size:18px;color:var(--ink-2);max-width:60ch;margin:0 0 8px}
+
+  /* ---------- mechanism ---------- */
+  .mech-quote{
+    font-size:clamp(22px,2.8vw,30px);line-height:1.32;font-weight:600;letter-spacing:-0.02em;
+    max-width:24ch;margin:0 0 6px
+  }
+  .mech-quote .hl-o{color:var(--open)}
+  .mech-quote .hl-c{color:var(--captured)}
+  .mech-attr{font-family:var(--mono);font-size:12px;color:var(--ink-3);margin:18px 0 0}
+  .choke{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--hairline);border:1px solid var(--hairline);border-radius:18px;overflow:hidden;margin-top:44px}
+  .choke .cell{background:var(--surface);padding:26px 24px;min-height:148px}
+  .choke .cn{font-size:11px;font-family:var(--mono);color:var(--captured);font-weight:600;letter-spacing:.03em}
+  .choke .ch{font-size:18px;font-weight:600;letter-spacing:-0.02em;margin:11px 0 9px}
+  .choke .cd{font-size:13.5px;color:var(--ink-2);line-height:1.45}
+  @media(max-width:820px){.choke{grid-template-columns:1fr 1fr}}
+  @media(max-width:520px){.choke{grid-template-columns:1fr}}
+
+  /* ---------- controls ---------- */
+  .controls{position:sticky;top:52px;z-index:40;background:rgba(251,251,253,.86);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);padding:18px 0 16px;border-bottom:1px solid var(--hairline-2)}
+  .seg{display:inline-flex;background:var(--surface-2);border-radius:11px;padding:3px;gap:2px}
+  .seg button{
+    border:0;background:transparent;font-family:var(--font);font-size:13.5px;font-weight:500;color:var(--ink-2);
+    padding:8px 16px;border-radius:8px;cursor:pointer;transition:all .18s;letter-spacing:-0.01em;white-space:nowrap
+  }
+  .seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.10);font-weight:600}
+  .ctrl-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  .chips{display:flex;gap:7px;flex-wrap:wrap}
+  .chip{
+    border:1px solid var(--hairline);background:var(--surface);border-radius:999px;
+    font-size:12.5px;color:var(--ink-2);padding:6px 13px;cursor:pointer;transition:all .16s;font-weight:500;letter-spacing:-0.01em
+  }
+  .chip:hover{border-color:rgba(0,0,0,.2)}
+  .chip[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .search{flex:1;min-width:160px;display:flex;align-items:center;gap:8px;background:var(--surface-2);border-radius:10px;padding:9px 13px}
+  .search input{border:0;background:transparent;outline:0;font-family:var(--font);font-size:14px;width:100%;color:var(--ink)}
+  .search svg{flex:0 0 auto;opacity:.45}
+  .count{font-family:var(--mono);font-size:12px;color:var(--ink-3);white-space:nowrap}
+  .ctrl-row.second{margin-top:13px;justify-content:space-between}
+
+  /* ---------- card grid ---------- */
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;padding:34px 0 10px}
+  @media(max-width:780px){.grid{grid-template-columns:1fr}}
+  .card{
+    background:var(--surface);border:1px solid var(--hairline);border-radius:20px;padding:22px 22px 20px;
+    box-shadow:var(--shadow);cursor:pointer;transition:transform .22s cubic-bezier(.2,.7,.3,1),box-shadow .22s,border-color .22s;
+    position:relative;overflow:hidden
+  }
+  .card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg);border-color:rgba(0,0,0,.14)}
+  .card:focus-visible{outline:2px solid var(--link);outline-offset:2px}
+  .card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:16px}
+  .card-title{font-size:18px;font-weight:600;letter-spacing:-0.022em;line-height:1.22}
+  .tags{display:flex;gap:6px;align-items:center;flex-wrap:wrap;flex:0 0 auto}
+  .tag{font-family:var(--mono);font-size:10px;letter-spacing:.02em;padding:4px 8px;border-radius:6px;font-weight:600;white-space:nowrap}
+  .tag.dir-ascent{background:var(--open-soft);color:#0c7a45}
+  .tag.dir-seeding{background:var(--captured-soft);color:#0a3f86}
+  .tag.year{background:var(--surface-2);color:var(--ink-3)}
+
+  /* chain */
+  .chain{display:flex;align-items:stretch;gap:0;flex-wrap:wrap;margin:0 0 16px}
+  .pill{display:inline-flex;flex-direction:column;gap:2px;border-radius:11px;padding:9px 13px;border:1px solid transparent;min-width:0}
+  .pill .pl{font-size:13px;font-weight:600;letter-spacing:-0.01em;line-height:1.2}
+  .pill .ps{font-size:10.5px;color:var(--ink-3);font-weight:500;line-height:1.2}
+  .pill.k-open{background:var(--open-soft);border-color:rgba(19,160,92,.18)}
+  .pill.k-open .pl{color:#0c7a45}
+  .pill.k-mid{background:var(--surface-2);border-color:var(--hairline)}
+  .pill.k-mid .pl{color:var(--ink)}
+  .pill.k-captured{background:var(--captured-soft);border-color:rgba(11,77,162,.18)}
+  .pill.k-captured .pl{color:var(--captured)}
+  .arr{display:flex;align-items:center;padding:0 7px;color:var(--ink-3);flex:0 0 auto}
+  .arr svg{display:block}
+
+  .card-foot{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-top:auto}
+  .mech{font-size:13px;color:var(--ink-2);line-height:1.4;max-width:78%}
+  .mech .ml{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.03em;color:var(--ink-3);display:block;margin-bottom:3px}
+  .value{font-size:20px;font-weight:700;letter-spacing:-0.03em;text-align:right;line-height:1.05;flex:0 0 auto}
+  .value.blue{color:var(--captured)}
+  .value.green{color:var(--open)}
+  .value.muted{color:var(--ink-3);font-size:13px;font-weight:600;max-width:120px}
+
+  .openness{position:absolute;top:0;right:0;font-family:var(--mono);font-size:9.5px;letter-spacing:.04em;color:var(--ink-3);padding:7px 11px;text-transform:uppercase}
+
+  /* expand body */
+  .body{max-height:0;overflow:hidden;transition:max-height .34s cubic-bezier(.2,.7,.3,1)}
+  .body-in{padding-top:17px;margin-top:17px;border-top:1px solid var(--hairline);font-size:14.5px;color:var(--ink-2);line-height:1.55}
+  .card.open .card-title{}
+  .outcome-line{font-family:var(--mono);font-size:11px;color:var(--ink-3);margin-top:13px;letter-spacing:.01em}
+
+  .empty{padding:60px 0;text-align:center;color:var(--ink-2)}
+  .empty b{color:var(--ink);font-weight:600;display:block;font-size:18px;margin-bottom:6px}
+  .empty button{margin-top:14px;border:1px solid var(--hairline);background:var(--surface);border-radius:10px;padding:9px 16px;font-family:var(--font);font-size:13.5px;cursor:pointer;color:var(--ink)}
+
+  /* footer */
+  footer{border-top:1px solid var(--hairline);padding:46px 0 70px;color:var(--ink-3);font-size:12.5px;line-height:1.6}
+  footer .frow{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}
+  footer a{color:var(--link);text-decoration:none}
+  footer b{color:var(--ink-2)}
+
+  .reveal{opacity:0;transform:translateY(14px)}
+  .reveal.in{opacity:1;transform:none;transition:opacity .6s ease,transform .6s cubic-bezier(.2,.7,.3,1)}
+
+  @media(prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important}
+    .reveal{opacity:1;transform:none}
+  }
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <div class="wrap bar-in">
+    <div class="brand"><span class="dot"></span>The Open Source Value Map</div>
+    <div class="bar-right">
+      <div class="bar-legend">
+        <span><span class="swatch o"></span>Open foundation</span>
+        <span><span class="swatch c"></span>Concentrated value</span>
+      </div>
+      <div class="bar-contact">
+        <a class="cbtn" href="mailto:pnelson@qumulo.com" aria-label="Email Peter Nelson">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m3.5 7 8.5 6 8.5-6"/></svg>
+          <span class="cbtn-label">Email</span>
+        </a>
+        <a class="cbtn" href="https://www.linkedin.com/in/YOUR-LINKEDIN" target="_blank" rel="noopener" aria-label="Peter Nelson on LinkedIn">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9h4v12H3V9Zm6 0h3.8v1.7h.05c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.78 2.65 4.78 6.1V21h-4v-5.3c0-1.27-.02-2.9-1.77-2.9-1.77 0-2.04 1.38-2.04 2.8V21H9V9Z"/></svg>
+          <span class="cbtn-label">LinkedIn</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Where value pools when the foundation is free</p>
+    <h1 class="title">Everyone builds on what is <em>free</em>. Almost no one keeps the value.</h1>
+    <p class="lede">Open standards, open code, and open weights are the substrate of the modern economy. Value does not stay in the substrate. It precipitates at the next scarce layer: <b>silicon, defaults, network effects, scale, trust.</b> This is a map of how that happens, in both directions: open foundations that <b>rose</b> into monopolies, and incumbents that <b>seeded</b> open source so others would build, and pay, on top.</p>
+
+    <svg class="flow" viewBox="0 0 1060 128" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+      <defs>
+        <linearGradient id="grad" x1="0" y1="0" x2="1060" y2="0" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stop-color="#13A05C"/>
+          <stop offset="1" stop-color="#0B4DA2"/>
+        </linearGradient>
+      </defs>
+      <path class="flow-track" d="M40,64 C300,64 300,64 530,64 C760,64 760,64 1010,64" opacity="0.22"/>
+      <path class="flow-dash" d="M40,64 C300,64 300,64 530,64 C760,64 760,64 1010,64"/>
+      <text class="flow-cap" x="40" y="98" text-anchor="middle">free</text>
+      <text class="flow-cap" x="290" y="98" text-anchor="middle">a library</text>
+      <text class="flow-cap" x="530" y="98" text-anchor="middle">a company</text>
+      <text class="flow-cap" x="770" y="98" text-anchor="middle">a default</text>
+      <text class="flow-cap" x="1010" y="98" text-anchor="middle">a monopoly</text>
+      <circle class="flow-node" cx="40" cy="64" r="6" fill="#13A05C"/>
+      <circle class="flow-node" cx="290" cy="64" r="6" fill="#2f8f72"/>
+      <circle class="flow-node" cx="530" cy="64" r="7" fill="#2a6ba0"/>
+      <circle class="flow-node" cx="770" cy="64" r="8" fill="#155bb0"/>
+      <circle class="pulse" cx="1010" cy="64" r="13" fill="#0B4DA2" style="transform-origin:1010px 64px"/>
+      <circle cx="1010" cy="64" r="9" fill="#0B4DA2"/>
+    </svg>
+  </div>
+</header>
+
+<div class="stats">
+  <div class="wrap stats-grid" id="stats"></div>
+</div>
+
+<section class="block">
+  <div class="wrap">
+    <p class="kicker">The mechanism</p>
+    <h2>Commoditize your complement</h2>
+    <p class="section-lede">A profit-maximizing company wants the things it sells to be expensive and the things it depends on to be cheap. Open source is the most efficient way ever invented to drive the price of a complement to zero, which is exactly why the largest companies fund so much of it.</p>
+
+    <p class="mech-quote" style="margin-top:38px">Make the <span class="hl-o">layer below you free</span>, and the demand flows up to <span class="hl-c">the scarce thing you still own.</span></p>
+    <p class="mech-attr">Joel Spolsky framed it in 2002. The AI era is the largest test of it yet.</p>
+
+    <div class="choke" id="choke"></div>
+  </div>
+</section>
+
+<div class="controls" id="controls">
+  <div class="wrap">
+    <div class="ctrl-row">
+      <div class="seg" role="group" aria-label="Direction of value flow">
+        <button data-dir="all" aria-pressed="true">All paths</button>
+        <button data-dir="ascent" aria-pressed="false">Open &rarr; captured</button>
+        <button data-dir="seeding" aria-pressed="false">Seeded &rarr; built upon</button>
+      </div>
+      <div class="search">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <input id="q" type="search" placeholder="Search a project, company, or person" aria-label="Search">
+      </div>
+    </div>
+    <div class="ctrl-row second">
+      <div class="chips" id="domains" role="group" aria-label="Domain"></div>
+      <div class="count" id="count"></div>
+    </div>
+  </div>
+</div>
+
+<main class="wrap">
+  <div class="grid" id="grid"></div>
+  <div class="empty" id="empty" style="display:none">
+    <b>No paths match these filters.</b>
+    Clear them to see the full map.
+    <div><button id="clear">Clear filters</button></div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap frow">
+    <div style="max-width:60ch">
+      <b>How to read this.</b> Each row is a lineage: a free foundation on the left, what it became in the middle, and where value concentrated on the right. Color grades from <span style="color:var(--open);font-weight:600">open green</span> to <span style="color:var(--captured);font-weight:600">captured blue</span>. Openness type (standard, software, weights, research) is noted in the corner of each card. Figures are headline deal or valuation numbers, not a measure of total economic value created.
+    </div>
+    <div style="text-align:right">
+      <b>As of June 2026.</b><br>
+      Valuations and deals move fast; figures marked &ldquo;reported&rdquo; are in flight.<br>
+      Built as a reference tool. Verify before external use.
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ---------------- data ---------------- */
+// kind: open | mid | captured
+// dir: ascent | seeding
+// dom: infra | os | data | web | devtools | ai
+// open: STANDARD | SOFTWARE | WEIGHTS | RESEARCH | PUBLIC DOMAIN | OPERATOR | PROPRIETARY CORE
+const DATA = [
+ {id:"ib", t:"InfiniBand \u2192 Mellanox \u2192 NVIDIA", dir:"ascent", dom:"infra", open:"STANDARD", yr:"1999\u201320", val:"$6.9B", vc:"blue",
+  chain:[{l:"InfiniBand",s:"open interconnect spec",k:"open"},{l:"Mellanox",s:"adapters & switches",k:"mid"},{l:"NVIDIA",s:"AI datacenter fabric",k:"captured"}],
+  mech:"Own the scarce networking layer of every GPU cluster",
+  body:"InfiniBand is an open interconnect standard governed by an industry trade association, not a product anyone could sell exclusively. Mellanox became the dominant maker of InfiniBand silicon, and in 2020 NVIDIA acquired Mellanox for about $6.9 billion. That open standard is now the backbone of NVIDIA's AI datacenter franchise, where the networking between GPUs is as scarce and defensible as the GPUs themselves.",
+  out:"Acquired 2020. Now core to a multi-trillion-dollar datacenter business."},
+
+ {id:"linux", t:"Linux \u2192 Red Hat \u2192 IBM", dir:"ascent", dom:"os", open:"SOFTWARE", yr:"1991\u201319", val:"$34B", vc:"blue",
+  chain:[{l:"Linux kernel",s:"GPL, free forever",k:"open"},{l:"Red Hat",s:"support & RHEL",k:"mid"},{l:"IBM",s:"hybrid cloud anchor",k:"captured"}],
+  mech:"You cannot sell GPL bits, so sell trust and operations",
+  body:"The Linux kernel is free under the GPL, which makes selling copies impossible. Red Hat built a multi-billion-dollar business selling everything around the free bits: certified builds, support, security, and enterprise trust. IBM acquired Red Hat for $34 billion in 2019, one of the largest software deals in history, for a company whose core product anyone can download for nothing.",
+  out:"IPO 1999. Acquired by IBM for $34B in 2019."},
+
+ {id:"spark", t:"Apache Spark \u2192 Databricks", dir:"ascent", dom:"data", open:"SOFTWARE", yr:"2010\u201326", val:"$134B", vc:"blue",
+  chain:[{l:"Apache Spark",s:"UC Berkeley AMPLab",k:"open"},{l:"Databricks",s:"data + AI platform",k:"captured"}],
+  mech:"Founders kept the platform; the engine stayed free",
+  body:"Apache Spark was created at UC Berkeley and donated to the Apache Foundation. The same researchers founded Databricks and built a managed platform on top. Databricks closed a round at a $134 billion valuation in February 2026 on a $5.4 billion revenue run-rate, and was reportedly in talks to raise at $165 to $175 billion in mid-2026. The compute engine is still free; the platform that operates it is one of the most valuable private companies on earth.",
+  out:"$134B (Feb 2026). Reported talks at $165\u2013175B; IPO expected."},
+
+ {id:"kafka", t:"Apache Kafka \u2192 Confluent", dir:"ascent", dom:"data", open:"SOFTWARE", yr:"2011\u201321", val:"IPO", vc:"green",
+  chain:[{l:"Apache Kafka",s:"built at LinkedIn",k:"open"},{l:"Confluent",s:"streaming platform",k:"captured"}],
+  mech:"The creators commercialized the operational layer",
+  body:"Kafka was built inside LinkedIn to move event streams at scale, then open sourced. Its creators left to start Confluent, which sells the managed, secured, governed version of the same open project. Confluent went public in 2021. The pattern repeats: the protocol is free, but running it reliably at enterprise scale is a business.",
+  out:"IPO 2021."},
+
+ {id:"lucene", t:"Apache Lucene \u2192 Elasticsearch \u2192 Elastic", dir:"ascent", dom:"data", open:"SOFTWARE", yr:"1999\u201318", val:"IPO", vc:"green",
+  chain:[{l:"Lucene",s:"search library",k:"open"},{l:"Elasticsearch",s:"distributed search",k:"mid"},{l:"Elastic",s:"public company",k:"captured"}],
+  mech:"Wrap a library into a system, then defend it",
+  body:"Apache Lucene is a free search library. Elasticsearch turned it into a distributed engine, and Elastic went public in 2018. When AWS began selling a managed Elasticsearch service, Elastic relicensed under SSPL in 2021 to stop the resale, AWS forked OpenSearch, and Elastic later returned to an open license in 2024. A clean illustration of how fiercely companies fight over who may monetize a commons.",
+  out:"IPO 2018. License war with AWS; OpenSearch fork."},
+
+ {id:"mongo", t:"MongoDB \u2192 MongoDB Inc.", dir:"ascent", dom:"data", open:"SOFTWARE", yr:"2009\u201317", val:"IPO", vc:"green",
+  chain:[{l:"MongoDB",s:"open document DB",k:"open"},{l:"MongoDB Inc.",s:"Atlas cloud service",k:"captured"}],
+  mech:"Open-core plus a managed cloud the clouds cannot resell",
+  body:"MongoDB shipped as open source, went public in 2017, and pioneered the SSPL license in 2018 specifically to stop cloud providers from offering it as a service without contributing back. Its own managed offering, Atlas, became the growth engine. The open database is the funnel; the operated database is the revenue.",
+  out:"IPO 2017. Created the SSPL license."},
+
+ {id:"hadoop", t:"Hadoop \u2192 Cloudera / Hortonworks", dir:"ascent", dom:"data", open:"SOFTWARE", yr:"2006\u201321", val:"merged", vc:"muted",
+  chain:[{l:"Hadoop",s:"from Google's papers",k:"open"},{l:"Cloudera / Hortonworks",s:"big-data unicorns",k:"mid"},{l:"Value evaporated",s:"cloud + Spark won",k:"captured"}],
+  mech:"Cautionary: the substrate moved out from under them",
+  body:"Hadoop implemented Google's published file-system and MapReduce ideas, and Cloudera and Hortonworks were the celebrated big-data unicorns of the 2010s. Then cloud object storage and Spark made the architecture obsolete. The two rivals merged in 2019 and Cloudera went private in 2021. Riding an open foundation is not enough if the foundation itself shifts.",
+  out:"Merged 2019. A warning about durability, not just adoption."},
+
+ {id:"mysql", t:"MySQL \u2192 Sun \u2192 Oracle", dir:"ascent", dom:"data", open:"SOFTWARE", yr:"1995\u201310", val:"$7.4B", vc:"blue",
+  chain:[{l:"MySQL",s:"GPL / dual license",k:"open"},{l:"Sun Microsystems",s:"bought for ~$1B",k:"mid"},{l:"Oracle",s:"acquired via Sun",k:"captured"}],
+  mech:"A free database absorbed into a proprietary empire",
+  body:"MySQL powered the early web under a dual license. Sun bought it for about $1 billion in 2008, and Oracle absorbed it when it acquired Sun for $7.4 billion in 2010. Fear that Oracle would smother it triggered the MariaDB fork by MySQL's own creator, which now ships in many Linux distributions.",
+  out:"Acquired via Sun, 2010. Spawned the MariaDB fork."},
+
+ {id:"postgres", t:"PostgreSQL \u2192 the cloud", dir:"ascent", dom:"data", open:"SOFTWARE", yr:"1996\u2192", val:"cloud", vc:"muted",
+  chain:[{l:"PostgreSQL",s:"permissive, ownerless",k:"open"},{l:"Aurora, RDS, Neon, Supabase",s:"managed services",k:"captured"}],
+  mech:"No corporate owner means the operators capture everything",
+  body:"PostgreSQL has no single company behind it and a permissive license. That openness means no one can pull it back, and it also means the value flows entirely to whoever operates it at scale. Amazon Aurora and RDS, plus startups like Neon and Supabase, built large businesses on a database that nobody owns and everybody can take.",
+  out:"The clearest case of value flowing to operators, not creators."},
+
+ {id:"redis", t:"Redis \u2192 Redis Inc.", dir:"ascent", dom:"data", open:"SOFTWARE", yr:"2009\u201325", val:"license war", vc:"muted",
+  chain:[{l:"Redis",s:"BSD in-memory store",k:"open"},{l:"Redis Inc.",s:"relicensed to block clouds",k:"mid"},{l:"Valkey fork",s:"Linux Foundation",k:"captured"}],
+  mech:"Pull the license back, and the community forks around you",
+  body:"Redis began as a permissively licensed project. As cloud providers resold it, Redis Inc. moved to restrictive licenses in 2024 to stop them. The community, with AWS, Google, and Oracle, forked Valkey under the Linux Foundation almost overnight. Redis returned to an open license in 2025. The episode showed that a company controlling a commons can lose it the moment the community decides it has overreached.",
+  out:"Relicense 2024, triggered Valkey fork, reopened 2025."},
+
+ {id:"nginx", t:"Nginx \u2192 F5", dir:"ascent", dom:"web", open:"SOFTWARE", yr:"2004\u201319", val:"$670M", vc:"blue",
+  chain:[{l:"Nginx",s:"runs much of the web",k:"open"},{l:"Nginx Inc.",s:"Plus, enterprise",k:"mid"},{l:"F5 Networks",s:"acquired ~$670M",k:"captured"}],
+  mech:"Free web server, paid enterprise edition and support",
+  body:"Nginx quietly became one of the most-deployed web servers on earth. The company sold a paid edition and support, and F5 Networks acquired it for around $670 million in 2019. Ubiquity at the infrastructure layer turned into an acquisition premium for the commercial wrapper.",
+  out:"Acquired by F5 for ~$670M, 2019."},
+
+ {id:"git", t:"Git \u2192 GitHub \u2192 Microsoft", dir:"ascent", dom:"devtools", open:"SOFTWARE", yr:"2005\u201318", val:"$7.5B", vc:"blue",
+  chain:[{l:"Git",s:"Torvalds, GPL",k:"open"},{l:"GitHub",s:"hosting + social graph",k:"mid"},{l:"Microsoft",s:"developer gravity",k:"captured"}],
+  mech:"Network effects on top of a commodity version control tool",
+  body:"Linus Torvalds wrote Git to manage the Linux kernel and released it freely. GitHub added hosting and a social layer, and the network effect of everyone's code living in one place became the moat. Microsoft acquired GitHub for $7.5 billion in stock in 2018, buying the gravitational center of the developer world that later anchored Copilot.",
+  out:"Acquired by Microsoft for $7.5B, 2018."},
+
+ {id:"gitlab", t:"Git \u2192 GitLab", dir:"ascent", dom:"devtools", open:"SOFTWARE", yr:"2011\u201321", val:"IPO", vc:"green",
+  chain:[{l:"Git",s:"the same free tool",k:"open"},{l:"GitLab",s:"open-core DevOps",k:"captured"}],
+  mech:"A second public company on the same free foundation",
+  body:"GitLab built an open-core DevOps platform on the very same free Git, and went public in 2021. Two independent multi-billion-dollar outcomes from one tool a single developer gave away tells you the value was never in the version control engine.",
+  out:"IPO 2021."},
+
+ {id:"docker", t:"Docker \u2192 Docker Inc.", dir:"ascent", dom:"devtools", open:"SOFTWARE", yr:"2013\u201319", val:"mindshare", vc:"muted",
+  chain:[{l:"Linux containers",s:"kernel primitives",k:"open"},{l:"Docker",s:"unmatched mindshare",k:"mid"},{l:"No durable moat",s:"K8s captured the layer above",k:"captured"}],
+  mech:"Cautionary: enormous adoption, almost no capture",
+  body:"Docker packaged existing Linux kernel features into a developer experience so good it changed the industry, and it had the mindshare of an entire generation of engineers. It never found the monetization. Kubernetes, which Google open sourced, captured the orchestration value above it, and Docker sold its enterprise business to Mirantis in 2019. Adoption without a scarce layer to own is not a business.",
+  out:"Enterprise unit sold to Mirantis, 2019. A mindshare cautionary tale."},
+
+ {id:"hashicorp", t:"Terraform \u2192 HashiCorp \u2192 IBM", dir:"ascent", dom:"devtools", open:"SOFTWARE", yr:"2014\u201324", val:"$6.4B", vc:"blue",
+  chain:[{l:"Terraform, Vault",s:"open source, in Go",k:"open"},{l:"HashiCorp",s:"IPO 2021",k:"mid"},{l:"IBM",s:"acquired ~$6.4B",k:"captured"}],
+  mech:"Open infra tools, then a license change to stop rivals",
+  body:"HashiCorp built the default tools for provisioning cloud infrastructure as open source. It went public in 2021, then moved Terraform to a restrictive license in 2023 to stop competitors, which triggered the OpenTofu fork under the Linux Foundation. IBM agreed to acquire HashiCorp for about $6.4 billion in 2024. The same fork-versus-relicense drama as Redis and Elastic.",
+  out:"IPO 2021. Acquired by IBM ~$6.4B. OpenTofu fork."},
+
+ {id:"sqlite", t:"SQLite \u2192 everywhere", dir:"ascent", dom:"devtools", open:"PUBLIC DOMAIN", yr:"2000\u2192", val:"$0 captured", vc:"muted",
+  chain:[{l:"SQLite",s:"public domain",k:"open"},{l:"Every phone & browser",s:"most-deployed DB on earth",k:"captured"}],
+  mech:"Total ubiquity, zero capture by design",
+  body:"SQLite is in the public domain and is embedded in essentially every smartphone, browser, and operating system, making it the most widely deployed database in the world. Its authors capture almost none of the value. The platforms that ship it inside trillion-dollar products capture all of it. Openness taken to its logical end: indispensable and unmonetizable.",
+  out:"Deployed billions of times. A gift to the platforms that embed it."},
+
+ {id:"bsd", t:"BSD Unix \u2192 Apple (Darwin)", dir:"ascent", dom:"os", open:"SOFTWARE", yr:"1977\u2192", val:"platform", vc:"blue",
+  chain:[{l:"Berkeley BSD",s:"permissive Unix",k:"open"},{l:"Darwin / XNU",s:"the core of macOS & iOS",k:"mid"},{l:"Apple",s:"most valuable company",k:"captured"}],
+  mech:"A permissive license let it be taken fully private",
+  body:"Berkeley's BSD Unix and its networking stack are permissively licensed, which means a company can take them, extend them, and close the result. Apple did exactly that: Darwin sits at the heart of macOS and iOS, and BSD code also runs inside PlayStation and countless devices. Part of the foundation of the world's most valuable company was free for the taking.",
+  out:"Foundation of macOS, iOS, and much more."},
+
+ {id:"webkit", t:"KHTML \u2192 WebKit \u2192 Safari & Chrome", dir:"ascent", dom:"web", open:"SOFTWARE", yr:"1998\u2192", val:"defaults", vc:"blue",
+  chain:[{l:"KHTML",s:"KDE open source",k:"open"},{l:"WebKit",s:"Apple's engine",k:"mid"},{l:"Safari & early Chrome",s:"default browsers",k:"captured"}],
+  mech:"An open engine became the default surface of the web",
+  body:"The KHTML engine from the KDE project became Apple's WebKit, which powered Safari and the first versions of Google Chrome before Google forked Blink. A small open-source rendering engine became the substrate beneath the two browsers that mediate most of the world's web traffic, and the value lives in the defaults, not the engine.",
+  out:"Powers Safari; seeded Chrome before the Blink fork."},
+
+ {id:"wordpress", t:"WordPress \u2192 Automattic", dir:"ascent", dom:"web", open:"SOFTWARE", yr:"2003\u2192", val:"$7.5B", vc:"blue",
+  chain:[{l:"WordPress",s:"GPL, runs ~40% of web",k:"open"},{l:"Automattic & hosts",s:"WordPress.com, WP Engine",k:"captured"}],
+  mech:"Commercialize the commons; then fight over who may",
+  body:"WordPress is free under the GPL and powers a huge share of all websites. Automattic built a roughly $7.5 billion business around it, and hosts like WP Engine built their own. In 2024 a public feud erupted between them over who is allowed to profit from the shared commons, a reminder that ownerless foundations create perpetual disputes over capture.",
+  out:"Automattic ~$7.5B (2021). 2024 commons dispute with WP Engine."},
+
+ {id:"jenkins", t:"Hudson \u2192 Jenkins \u2192 CloudBees", dir:"ascent", dom:"devtools", open:"SOFTWARE", yr:"2005\u2192", val:"commercial", vc:"green",
+  chain:[{l:"Hudson / Jenkins",s:"open CI server",k:"open"},{l:"CloudBees",s:"enterprise CI/CD",k:"captured"}],
+  mech:"Free automation server, paid enterprise governance",
+  body:"Hudson, renamed Jenkins after an Oracle trademark dispute, became the default open-source automation server for continuous integration. CloudBees built the enterprise business around it: governance, scale, and support. The recurring shape of open infrastructure plus a commercial operator.",
+  out:"CloudBees commercialized the enterprise tier."},
+
+ {id:"crypto", t:"Bitcoin & Ethereum \u2192 Coinbase", dir:"ascent", dom:"web", open:"SOFTWARE", yr:"2009\u2192", val:"IPO", vc:"green",
+  chain:[{l:"Open protocols",s:"ownerless, forkable",k:"open"},{l:"Exchanges & infra",s:"access, custody, trust",k:"captured"}],
+  mech:"Capture access and trust on a protocol nobody owns",
+  body:"Bitcoin and Ethereum are open-source protocols with no owner. The largest businesses in the space did not invent the protocols; they built the on-ramps. Coinbase went public providing custody, access, and regulatory trust on top of code anyone can run. The protocol is the commons; the trusted gateway is the franchise.",
+  out:"Coinbase IPO 2021 on protocols no company controls."},
+
+ {id:"riscv", t:"RISC-V \u2192 SiFive, Tenstorrent", dir:"ascent", dom:"infra", open:"STANDARD", yr:"2010\u2192", val:"emerging", vc:"green",
+  chain:[{l:"RISC-V",s:"open instruction set",k:"open"},{l:"SiFive, Tenstorrent",s:"custom silicon",k:"captured"}],
+  mech:"An open ISA to escape Arm and x86 licensing rent",
+  body:"RISC-V is an open instruction-set architecture from UC Berkeley. Because the ISA is free, silicon firms like SiFive and Tenstorrent, and increasingly the hyperscalers, can design chips without paying license rent to Arm or building x86 compatibility. The open standard exists precisely to commoditize the layer that Arm and Intel have long monetized.",
+  out:"Early innings. The networking-to-Mellanox pattern, one layer down."},
+
+ {id:"sd", t:"Stable Diffusion \u2192 Stability AI", dir:"ascent", dom:"ai", open:"WEIGHTS", yr:"2022\u2192", val:"cautionary", vc:"muted",
+  chain:[{l:"Stable Diffusion",s:"open image weights",k:"open"},{l:"A vast ecosystem",s:"ComfyUI, Civitai, apps",k:"mid"},{l:"Stability struggled",s:"restructured",k:"captured"}],
+  mech:"Cautionary: open weights defined a category it could not keep",
+  body:"Stability AI released open image-generation weights that seeded an enormous ecosystem of tools and products. Stability itself ran into financial trouble and restructured, while others built on the free weights. Open weights can define an entire field while the lab that released them captures little of the value, the model-layer version of the Docker problem.",
+  out:"Seeded an industry; the releaser nearly failed."},
+
+ {id:"hf", t:"Transformers library \u2192 Hugging Face", dir:"ascent", dom:"ai", open:"SOFTWARE", yr:"2018\u2192", val:"$4.5B", vc:"blue",
+  chain:[{l:"\ud83e\udd17 Transformers",s:"the default way to use models",k:"open"},{l:"Hugging Face",s:"the hub for AI",k:"captured"}],
+  mech:"Own the registry and distribution layer of open models",
+  body:"Hugging Face's open-source Transformers library became the standard way developers load and run models, and the company turned that into the hub where models are hosted, shared, and discovered, valued around $4.5 billion in 2023. It is doing for AI models what GitHub did for code: capture the distribution layer on top of a free standard.",
+  out:"~$4.5B (2023). The GitHub of AI."},
+
+ {id:"langchain", t:"LangChain \u2192 LangChain Inc.", dir:"ascent", dom:"ai", open:"SOFTWARE", yr:"2022\u2192", val:"unicorn", vc:"green",
+  chain:[{l:"LangChain",s:"open LLM-app framework",k:"open"},{l:"LangChain Inc.",s:"LangSmith, observability",k:"captured"}],
+  mech:"Open framework as funnel, paid observability as product",
+  body:"The open-source LangChain framework spread fast as a way to wire up LLM applications. The company monetizes the operational layer around it: tracing, evaluation, and deployment through LangSmith. The framework drives adoption; the tooling that makes it production-ready is the revenue.",
+  out:"Raised at unicorn-range valuations."},
+
+ {id:"nvidia", t:"NVIDIA \u2192 own the one scarce layer", dir:"ascent", dom:"infra", open:"PROPRIETARY CORE", yr:"2006\u2192", val:"the playbook", vc:"blue",
+  chain:[{l:"Everything around it is free",s:"frameworks, models, even InfiniBand",k:"open"},{l:"CUDA stays closed",s:"the moat",k:"mid"},{l:"NVIDIA",s:"the defining capture of the era",k:"captured"}],
+  mech:"The inverse lesson: let complements go free, own the core",
+  body:"NVIDIA is the strategy run in reverse and to perfection. It encourages everything around its chips to commoditize, the deep-learning frameworks, the open models, even the InfiniBand standard it bought via Mellanox, while keeping CUDA proprietary as the one layer that locks developers in. Make every complement free, keep the single scarce thing closed. It is the clearest value-capture play of the AI era.",
+  out:"The benchmark every infrastructure strategy is measured against."},
+
+ // ---------------- seeding ----------------
+ {id:"vscode", t:"Microsoft \u2192 VS Code \u2192 Cursor \u2192 SpaceX", dir:"seeding", dom:"devtools", open:"SOFTWARE", yr:"2015\u201326", val:"$60B", vc:"blue",
+  chain:[{l:"VS Code",s:"Microsoft, MIT license",k:"open"},{l:"Cursor",s:"forked into an AI editor",k:"mid"},{l:"SpaceX",s:"agreed to acquire Anysphere",k:"captured"}],
+  mech:"Give away the editor; the fork becomes a $60B company",
+  body:"Microsoft open sourced VS Code to win developer mindshare and funnel it toward GitHub, Azure, and Copilot. Anysphere forked that free editor into Cursor, reached roughly $2 billion in annual recurring revenue in about three years, and on June 16, 2026 SpaceX agreed to acquire Anysphere for $60 billion in an all-stock deal, expected to close in the third quarter of 2026 pending regulatory approval. The thing Microsoft gave away seeded one of the largest software acquisitions ever.",
+  out:"SpaceX agreed to acquire for $60B (Jun 2026); close expected Q3 2026."},
+
+ {id:"windsurf", t:"Microsoft \u2192 VS Code \u2192 Windsurf \u2192 split", dir:"seeding", dom:"devtools", open:"SOFTWARE", yr:"2015\u201326", val:"~$250M", vc:"muted",
+  chain:[{l:"VS Code",s:"the same free editor",k:"open"},{l:"Windsurf",s:"Codeium's AI fork",k:"mid"},{l:"Google + Cognition",s:"talent, then the husk",k:"captured"}],
+  mech:"Same foundation, opposite outcome to Cursor",
+  body:"Windsurf was another VS Code fork. A reported $3 billion OpenAI acquisition collapsed; Google then took the founders and a technology license for about $2.4 billion, and Cognition (maker of Devin) bought what remained of the company for around $250 million in December 2025, later folding it into Devin Desktop. Two companies built on the identical free foundation, one heading toward $60 billion and one dismembered across three buyers. The foundation does not decide the outcome.",
+  out:"OpenAI deal collapsed; Google ~$2.4B for talent; Cognition ~$250M."},
+
+ {id:"typescript", t:"Microsoft \u2192 TypeScript \u2192 the JS world", dir:"seeding", dom:"devtools", open:"SOFTWARE", yr:"2012\u2192", val:"standard", vc:"green",
+  chain:[{l:"TypeScript",s:"Microsoft, open source",k:"open"},{l:"Angular, Deno, Bun, most apps",s:"the default JS dialect",k:"captured"}],
+  mech:"Define the language; steer the ecosystem to your tools",
+  body:"Microsoft built TypeScript and gave it away, and it became the default dialect of modern web development, underneath Angular, Vue tooling, Deno, Bun, and most large JavaScript codebases. Owning the language the world writes in is a quieter, deeper kind of leverage than owning any single product.",
+  out:"The de facto language of modern web development."},
+
+ {id:"electron", t:"GitHub \u2192 Electron \u2192 Slack, Discord, Figma", dir:"seeding", dom:"devtools", open:"SOFTWARE", yr:"2013\u2192", val:"many unicorns", vc:"blue",
+  chain:[{l:"Electron",s:"from GitHub's Atom",k:"open"},{l:"Web teams ship desktop apps",s:"one codebase",k:"mid"},{l:"Slack, Discord, Notion, Figma",s:"multi-billion-dollar apps",k:"captured"}],
+  mech:"A free runtime seeded a generation of desktop unicorns",
+  body:"Electron, which came out of GitHub's Atom editor, let web developers ship desktop applications without learning native code. It powers Slack, Discord, Notion, Figma's desktop app, Teams, 1Password, and VS Code itself. A single free runtime lowered the cost of building desktop software so far that it seeded a whole cohort of billion-dollar companies.",
+  out:"Underneath a long list of unicorns and decacorns."},
+
+ {id:"k8s", t:"Google \u2192 Kubernetes \u2192 cloud-native", dir:"seeding", dom:"devtools", open:"SOFTWARE", yr:"2014\u2192", val:"the standard", vc:"blue",
+  chain:[{l:"Kubernetes",s:"distilled from Borg",k:"open"},{l:"OpenShift, Rancher, EKS/AKS/GKE",s:"managed everywhere",k:"mid"},{l:"The whole CNCF",s:"an industry standard",k:"captured"}],
+  mech:"Open the orchestration layer to pull workloads toward cloud",
+  body:"Google open sourced Kubernetes in 2014, distilled from its internal Borg system, to commoditize container orchestration and slow AWS's lead. It seeded Red Hat OpenShift, Rancher under SUSE, every hyperscaler's managed service, and the entire CNCF ecosystem. By making orchestration a free standard, Google ensured no rival could own it, and that workloads stayed portable toward Google Cloud.",
+  out:"The default way the industry runs containers."},
+
+ {id:"chromium", t:"Google \u2192 Chromium \u2192 every other browser", dir:"seeding", dom:"web", open:"SOFTWARE", yr:"2008\u2192", val:"engine dominance", vc:"blue",
+  chain:[{l:"Chromium",s:"open browser engine",k:"open"},{l:"Edge, Brave, Opera, Arc, Vivaldi",s:"all built on it",k:"mid"},{l:"Search defaults stay safe",s:"Google's actual core",k:"captured"}],
+  mech:"Fund a free engine to protect the search default",
+  body:"Chromium is open source, and Microsoft Edge, Brave, Opera, Arc, Vivaldi, and Samsung Internet are all built on it. Google funds a free, world-class browser engine because the browser is the complement to its real product, search and ads. Commoditize the browser, and the default search box, the thing that actually prints money, stays protected.",
+  out:"Near-total rendering-engine dominance via a free complement."},
+
+ {id:"android", t:"Google \u2192 Android (AOSP) \u2192 every non-Apple phone", dir:"seeding", dom:"os", open:"SOFTWARE", yr:"2008\u2192", val:"global OS", vc:"blue",
+  chain:[{l:"AOSP",s:"open mobile OS",k:"open"},{l:"Samsung, Xiaomi, all OEMs",s:"ship for free",k:"mid"},{l:"Google services stay central",s:"Play, search, ads",k:"captured"}],
+  mech:"Free OS for the world; keep services and the store central",
+  body:"The Android Open Source Project let Samsung, Xiaomi, and every non-Apple manufacturer ship phones without paying for an operating system. By commoditizing the mobile OS to zero, Google guaranteed that its services, the Play Store, search, and ads, stayed at the center of the world's phones. Amazon's Fire OS shows the other edge: you can fork the free OS, but you lose the services that matter.",
+  out:"Powers the large majority of the world's smartphones."},
+
+ {id:"tensorflow", t:"Google \u2192 TensorFlow \u2192 the first ML wave", dir:"seeding", dom:"ai", open:"SOFTWARE", yr:"2015\u2192", val:"then displaced", vc:"muted",
+  chain:[{l:"TensorFlow",s:"open ML framework",k:"open"},{l:"Production ML on Google Cloud / TPUs",s:"the pull",k:"mid"},{l:"Overtaken by PyTorch",s:"seeding is not control",k:"captured"}],
+  mech:"Seeding the framework did not guarantee lasting control",
+  body:"TensorFlow seeded the first wave of production machine learning and pulled training workloads toward Google Cloud and its TPUs. Then Meta's PyTorch, easier to use, took the research community and then the industry. A pointed lesson that releasing the open standard buys influence, not permanence.",
+  out:"Defined a wave, then lost it to PyTorch."},
+
+ {id:"go", t:"Google \u2192 Go \u2192 the infrastructure layer", dir:"seeding", dom:"devtools", open:"SOFTWARE", yr:"2009\u2192", val:"lingua franca", vc:"green",
+  chain:[{l:"Go",s:"open language for systems",k:"open"},{l:"Docker, Kubernetes, Terraform, CNCF",s:"all written in it",k:"captured"}],
+  mech:"The language of cloud infrastructure was given away",
+  body:"Go was built at Google and open sourced, and it became the default language of cloud infrastructure. Docker, Kubernetes, Terraform, and most HashiCorp and CNCF tools are written in it. When the tools that run the cloud are all written in your language, you shape the entire layer without selling a single product.",
+  out:"The default language of modern infrastructure tooling."},
+
+ {id:"transformer", t:"Google Research \u2192 the Transformer \u2192 the AI boom", dir:"seeding", dom:"ai", open:"RESEARCH", yr:"2017\u2192", val:"$100B+", vc:"blue",
+  chain:[{l:"'Attention Is All You Need'",s:"published openly, 2017",k:"open"},{l:"GPT, Claude, Gemini, Llama",s:"all built on it",k:"mid"},{l:"OpenAI, Anthropic capture most",s:"others, not Google",k:"captured"}],
+  mech:"The most valuable idea of the decade, given away in a paper",
+  body:"Google researchers published the Transformer architecture openly in 2017. It became the foundation of GPT, Claude, Gemini, Llama, and Mistral, seeding hundreds of billions of dollars of value, much of it captured by OpenAI and Anthropic rather than Google. Open research is the purest seeding of all: the idea spreads instantly and freely, and the company that published it has no special claim on what gets built.",
+  out:"Seeded the entire large-language-model industry."},
+
+ {id:"react", t:"Meta \u2192 React \u2192 Vercel & the frontend industry", dir:"seeding", dom:"web", open:"SOFTWARE", yr:"2013\u2192", val:"~$3B+", vc:"blue",
+  chain:[{l:"React",s:"open UI library",k:"open"},{l:"Next.js",s:"a framework on top",k:"mid"},{l:"Vercel",s:"a platform on top of that",k:"captured"}],
+  mech:"Give away the library; others build the paid platform",
+  body:"Meta open sourced React in 2013, and it became the default way the web is built. Vercel built Next.js and a deployment platform around it, reaching multi-billion-dollar valuations, and an entire industry of tooling and agencies grew on top. Meta gets a standardized, well-staffed ecosystem and recruiting funnel; Vercel and others get to monetize the platform layer.",
+  out:"Seeded Vercel and the modern frontend stack."},
+
+ {id:"rn", t:"Meta \u2192 React Native \u2192 cross-platform mobile", dir:"seeding", dom:"web", open:"SOFTWARE", yr:"2015\u2192", val:"ecosystem", vc:"green",
+  chain:[{l:"React Native",s:"one codebase, two platforms",k:"open"},{l:"Consumer apps + Expo",s:"shipped on it",k:"captured"}],
+  mech:"Lower the cost of mobile; seed the tooling vendors",
+  body:"React Native let teams build iOS and Android apps from a single JavaScript codebase, and it underpins many consumer apps plus a tooling ecosystem led by Expo. The same move as React, applied to mobile: commoditize the build layer and standardize the world around your approach.",
+  out:"A widely used cross-platform mobile standard."},
+
+ {id:"pytorch", t:"Meta \u2192 PyTorch \u2192 every AI lab", dir:"seeding", dom:"ai", open:"SOFTWARE", yr:"2016\u2192", val:"the substrate", vc:"blue",
+  chain:[{l:"PyTorch",s:"open, now Linux Foundation",k:"open"},{l:"Training runs everywhere",s:"the default framework",k:"mid"},{l:"OpenAI, Anthropic & all labs",s:"build on it",k:"captured"}],
+  mech:"Commoditize the AI substrate so no vendor can charge rent",
+  body:"PyTorch is the framework nearly every frontier lab trains on, OpenAI and Anthropic included, and Meta donated it to the Linux Foundation in 2022. By making the substrate of the entire AI boom free and neutral, Meta ensured it would never depend on a competitor's framework and that the field would standardize on its tools. The most important software of the AI era is something Meta deliberately does not own alone.",
+  out:"The training substrate beneath essentially every frontier model."},
+
+ {id:"llama", t:"Meta \u2192 Llama \u2192 Mistral & the serving layer", dir:"seeding", dom:"ai", open:"WEIGHTS", yr:"2023\u2192", val:"\u20ac11.7B", vc:"blue",
+  chain:[{l:"Llama",s:"open model weights",k:"open"},{l:"Fine-tunes, serving, apps",s:"Together, Fireworks, Groq, Perplexity",k:"mid"},{l:"Mistral",s:"a European AI champion",k:"captured"}],
+  mech:"Free weights so no rival lab can charge Meta rent",
+  body:"Meta released Llama's weights openly in 2023, seeding fine-tunes, a serving industry (Together AI, Fireworks, Groq), and apps like Perplexity. Mistral, founded by researchers from Meta and DeepMind, reached about 11.7 billion euros in 2025 and was reportedly raising near 20 billion in mid-2026, and itself releases open models. Meta commoditizes the model layer so that the price of intelligence trends toward zero and no competitor can lock it in.",
+  out:"Seeded a serving industry and Europe's leading AI lab (Mistral, reported ~\u20ac20B)."},
+
+ {id:"meta-other", t:"Meta \u2192 Cassandra, GraphQL, RocksDB \u2192 vendors", dir:"seeding", dom:"data", open:"SOFTWARE", yr:"2008\u2192", val:"multiple", vc:"green",
+  chain:[{l:"Cassandra, GraphQL, RocksDB",s:"out of Facebook",k:"open"},{l:"DataStax, Apollo, embedded everywhere",s:"outside businesses",k:"captured"}],
+  mech:"Internal tools released, external companies formed",
+  body:"A steady stream of open source out of Facebook seeded businesses elsewhere: Cassandra became DataStax, GraphQL became Apollo, and RocksDB sits quietly inside countless databases. Releasing internal infrastructure recruits contributors, sets standards, and hands the commercialization to others.",
+  out:"Seeded DataStax, Apollo, and a generation of storage engines."},
+
+ {id:"aws-taker", t:"Amazon \u2192 the great taker \u2192 managed services", dir:"seeding", dom:"data", open:"OPERATOR", yr:"2006\u2192", val:"the inversion", vc:"blue",
+  chain:[{l:"Other people's open source",s:"Postgres, Redis, Elasticsearch, Kafka",k:"open"},{l:"AWS operates it at scale",s:"managed services",k:"mid"},{l:"One of history's great franchises",s:"capture without creation",k:"captured"}],
+  mech:"The operator at scale often beats the creator",
+  body:"AWS built one of the most profitable franchises ever largely by operating other people's open source as managed services: Postgres, Redis, Elasticsearch, Kafka, and more. The backlash drove the license wars (SSPL, BSL) and the forks (OpenSearch, Valkey). It is the seeding story inverted: when a foundation is open, the hyperscaler that runs it at scale can capture more value than whoever wrote it.",
+  out:"Proof that, in open source, scale of operation can beat authorship."}
+];
+
+const CHOKE = [
+ {n:"Layer 01", h:"Silicon & hardware", d:"You cannot download a GPU. NVIDIA, Apple, and the Mellanox interconnect win because the physical scarce layer is the one place open source cannot reach."},
+ {n:"Layer 02", h:"Defaults & distribution", d:"Whoever owns the default search box, app store, or pre-installed browser captures the demand that flows up from the free layer below."},
+ {n:"Layer 03", h:"Network effects", d:"GitHub, Hugging Face, and Coinbase win because everyone's code, models, or coins live in one place. The graph is the moat, not the protocol."},
+ {n:"Layer 04", h:"Scale & operations", d:"Running open software reliably at planetary scale is its own product. Red Hat, Databricks, and AWS sell the operation, not the bits."},
+ {n:"Layer 05", h:"Trust & brand", d:"Enterprises pay for someone to call at 3am, an indemnity, and a logo their auditors recognize. Free code does not come with a throat to choke."},
+ {n:"Layer 06", h:"Data & feedback", d:"The model substrate is free, so value moves to proprietary data and the usage loop. The weights commoditize; the data and the distribution do not."}
+];
+
+const STATS = [
+ {n:"$60B", k:"SpaceX's agreed price for Cursor, forked from Microsoft's free VS Code", src:"Jun 16, 2026", blue:true},
+ {n:"$134B", k:"Databricks valuation, built on Apache Spark; reported talks at $165\u2013175B", src:"Feb / Jun 2026", blue:true},
+ {n:"$34B", k:"IBM's price for Red Hat, a business selling free Linux", src:"2019", blue:true},
+ {n:"$7.5B", k:"Microsoft's price for GitHub, hosting on free Git", src:"2018", blue:true},
+ {n:"$6.9B", k:"NVIDIA's price for Mellanox and the open InfiniBand standard", src:"2020", blue:true}
+];
+
+const DOMAINS = [
+ {k:"infra", l:"Networking & silicon"},
+ {k:"os", l:"OS & kernels"},
+ {k:"data", l:"Databases & data"},
+ {k:"web", l:"Web & browsers"},
+ {k:"devtools", l:"Developer tools"},
+ {k:"ai", l:"AI & ML"}
+];
+
+/* ---------------- render ---------------- */
+const state = {dir:"all", domains:new Set(), q:""};
+
+function el(html){const d=document.createElement("div");d.innerHTML=html.trim();return d.firstElementChild;}
+
+function chainHTML(chain){
+  let h="";
+  chain.forEach((node,i)=>{
+    h+=`<div class="pill k-${node.k}"><span class="pl">${node.l}</span><span class="ps">${node.s}</span></div>`;
+    if(i<chain.length-1){
+      h+=`<span class="arr"><svg width="16" height="10" viewBox="0 0 16 10" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1 5h13M10 1l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;
+    }
+  });
+  return h;
+}
+
+function cardHTML(d){
+  const dirLabel = d.dir==="ascent" ? "OPEN \u2192 CAPTURED" : "SEEDED";
+  const valClass = d.vc==="blue"?"blue":d.vc==="green"?"green":"muted";
+  return `
+  <article class="card reveal" tabindex="0" data-id="${d.id}" aria-expanded="false">
+    <span class="openness">${d.open}</span>
+    <div class="card-top">
+      <div class="card-title">${d.t}</div>
+      <div class="tags">
+        <span class="tag dir-${d.dir}">${dirLabel}</span>
+        <span class="tag year">${d.yr}</span>
+      </div>
+    </div>
+    <div class="chain">${chainHTML(d.chain)}</div>
+    <div class="card-foot">
+      <div class="mech"><span class="ml">Where value pools</span>${d.mech}</div>
+      <div class="value ${valClass}">${d.val}</div>
+    </div>
+    <div class="body"><div class="body-in">${d.body}<div class="outcome-line">\u25B8 ${d.out}</div></div></div>
+  </article>`;
+}
+
+function matches(d){
+  if(state.dir!=="all" && d.dir!==state.dir) return false;
+  if(state.domains.size && !state.domains.has(d.dom)) return false;
+  if(state.q){
+    const hay=(d.t+" "+d.body+" "+d.mech+" "+d.chain.map(c=>c.l+" "+c.s).join(" ")).toLowerCase();
+    if(!hay.includes(state.q.toLowerCase())) return false;
+  }
+  return true;
+}
+
+const grid=document.getElementById("grid");
+const empty=document.getElementById("empty");
+const countEl=document.getElementById("count");
+
+function render(){
+  const list=DATA.filter(matches);
+  grid.innerHTML="";
+  list.forEach(d=>grid.appendChild(el(cardHTML(d))));
+  empty.style.display=list.length?"none":"block";
+  countEl.textContent=`${list.length} of ${DATA.length} paths`;
+  bindCards();
+  observe();
+}
+
+function bindCards(){
+  grid.querySelectorAll(".card").forEach(card=>{
+    const toggle=()=>{
+      const body=card.querySelector(".body");
+      const open=card.classList.toggle("open");
+      card.setAttribute("aria-expanded", open?"true":"false");
+      body.style.maxHeight = open ? body.scrollHeight+40+"px" : "0px";
+    };
+    card.addEventListener("click",toggle);
+    card.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){e.preventDefault();toggle();}});
+  });
+}
+
+/* stats + choke + domains */
+document.getElementById("stats").innerHTML = STATS.map(s=>
+  `<div class="stat"><div class="n ${s.blue?'blue':''}">${s.n}</div><div class="k">${s.k}</div><div class="src">${s.src}</div></div>`
+).join("");
+
+document.getElementById("choke").innerHTML = CHOKE.map(c=>
+  `<div class="cell"><div class="cn">${c.n}</div><div class="ch">${c.h}</div><div class="cd">${c.d}</div></div>`
+).join("");
+
+const domainsWrap=document.getElementById("domains");
+domainsWrap.innerHTML = DOMAINS.map(d=>`<button class="chip" data-dom="${d.k}" aria-pressed="false">${d.l}</button>`).join("");
+domainsWrap.querySelectorAll(".chip").forEach(c=>{
+  c.addEventListener("click",()=>{
+    const k=c.dataset.dom, on=state.domains.has(k);
+    if(on){state.domains.delete(k);c.setAttribute("aria-pressed","false");}
+    else{state.domains.add(k);c.setAttribute("aria-pressed","true");}
+    render();
+  });
+});
+
+document.querySelectorAll(".seg button").forEach(b=>{
+  b.addEventListener("click",()=>{
+    state.dir=b.dataset.dir;
+    document.querySelectorAll(".seg button").forEach(x=>x.setAttribute("aria-pressed", x===b?"true":"false"));
+    render();
+  });
+});
+
+const qInput=document.getElementById("q");
+qInput.addEventListener("input",()=>{state.q=qInput.value;render();});
+
+document.getElementById("clear").addEventListener("click",()=>{
+  state.dir="all";state.domains.clear();state.q="";qInput.value="";
+  document.querySelectorAll(".seg button").forEach(x=>x.setAttribute("aria-pressed", x.dataset.dir==="all"?"true":"false"));
+  domainsWrap.querySelectorAll(".chip").forEach(c=>c.setAttribute("aria-pressed","false"));
+  render();
+});
+
+/* reveal on scroll */
+let io;
+function observe(){
+  if(io) io.disconnect();
+  if(!("IntersectionObserver" in window)){document.querySelectorAll(".reveal").forEach(r=>r.classList.add("in"));return;}
+  io=new IntersectionObserver((ents)=>{
+    ents.forEach(e=>{ if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target);} });
+  },{threshold:0.08, rootMargin:"0px 0px -40px 0px"});
+  document.querySelectorAll(".reveal:not(.in)").forEach(r=>io.observe(r));
+}
+
+render();
+</script>
+</body>
+</html>
