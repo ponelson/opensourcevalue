@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#f5f5f7" id="themeColorMeta">
-<title>The Open Source Value Map v1.0 — where value pools when the foundation is free</title>
-<meta property="og:title" content="The Open Source Value Map v1.0">
-<meta property="og:description" content="A reference map of 30 lineages showing how open foundations rose into monopolies, and how incumbents seeded open source so others would build (and pay) on top.">
-<meta name="description" content="Where value pools when the foundation is free — 30 open-source value lineages, filterable and searchable.">
+<title>The Open Source Value Map v1.1 — where value pools when the foundation is free</title>
+<meta property="og:title" content="The Open Source Value Map v1.1">
+<meta property="og:description" content="A reference map of 43 lineages showing how open foundations rose into monopolies, and how incumbents seeded open source so others would build (and pay) on top.">
+<meta name="description" content="Where value pools when the foundation is free — 43 open-source value lineages, filterable and searchable.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&family=Source+Serif+4:opsz,wght@8..60,500;8..60,700;8..60,900&display=swap" rel="stylesheet">
@@ -366,7 +366,7 @@ html[data-theme="dark"]{
   <nav class="nav">
     <div class="wrap">
       <span class="brand"><span class="dot"></span>Open Source Value Map</span>
-      <span class="vtag">v1.0</span>
+      <span class="vtag">v1.1</span>
       <div class="nav-legend">
         <span><span class="swatch o"></span>Open foundation</span>
         <span><span class="swatch c"></span>Concentrated value</span>
@@ -382,7 +382,7 @@ html[data-theme="dark"]{
   <div class="orb a"></div>
   <div class="orb b"></div>
   <div class="wrap">
-    <div class="eyebrow">Value chains / <b>v1.0</b> · 28 August 2026, 2:09 AM ET · build 2026-08-28T06:09-04:00</div>
+    <div class="eyebrow">Value chains / <b>v1.1</b> · 19 October 2026, 6:08 PM ET · build 2026-10-19T18:08-04:00</div>
     <h1>Everyone builds on what is <em>free</em>. Someone else often keeps the value.</h1>
     <p class="lede">This is a map of how that happens: both how open foundations rose into monopolies, and how incumbents seeded open source so others would build (and pay) on top.</p>
 
@@ -470,7 +470,7 @@ html[data-theme="dark"]{
     </div>
   </div>
   <div class="wrap">
-    <p class="verstamp">The Open Source Value Map — v1.0 · build 2026-08-28T06:09-04:00. First house-style edition.</p>
+    <p class="verstamp">The Open Source Value Map v1.1 · build 2026-10-19T18:08-04:00 · supersedes v1.0 (build 2026-08-28T06:09-04:00), the first house-style edition. Changes in v1.1: the Cursor row records the SpaceX acquisition as closed (14 August 2026), matching the AI Model Stack. Databricks moves to its $190B August round, with the $134B round dated to December 2025 as in the AI capital map. Kafka now runs to IBM, which closed its ~$11B Confluent acquisition in March 2026, and the Red Hat, Cassandra and Kafka rows name IBM as the common end buyer. The Postgres row notes Neon (Databricks) and Crunchy Data (Snowflake). A MinIO row is added for the case where the open edition is archived rather than relicensed. The Windsurf row dates Cognition&rsquo;s agreement to July 2025. Eight uses of avoid-list terms replaced. The lineage count in the page description corrected to 43.</p>
   </div>
 </footer>
 
@@ -543,19 +543,19 @@ const DATA = [
   chain:[{l:"Linux kernel",s:"GPL, free forever",k:"open"},{l:"Red Hat",s:"support & RHEL",k:"mid"},{l:"IBM",s:"hybrid cloud anchor",k:"captured"}],
   mech:"You cannot sell GPL bits, so sell trust and operations",
   body:"The Linux kernel is free under the GPL, which makes selling copies impossible. Red Hat built a multi-billion-dollar business selling everything around the free bits: certified builds, support, security, and enterprise trust. IBM acquired Red Hat for $34 billion in 2019, one of the largest software deals in history, for a company whose core product anyone can download for nothing.",
-  out:"IPO 1999. Acquired by IBM for $34B in 2019."},
+  out:"IPO 1999. Acquired by IBM for $34B in 2019. IBM has since bought HashiCorp, DataStax and Confluent: it is now the serial end buyer for open-source commercializers."},
 
- {id:"spark", t:"Apache Spark \u2192 Databricks", dir:"ascent", dom:"data", open:"SOFTWARE", yr:"2010\u201326", val:"$134B", vc:"blue",
+ {id:"spark", t:"Apache Spark \u2192 Databricks", dir:"ascent", dom:"data", open:"SOFTWARE", yr:"2010\u201326", val:"$190B", vc:"blue",
   chain:[{l:"Apache Spark",s:"UC Berkeley AMPLab",k:"open"},{l:"Databricks",s:"data + AI platform",k:"captured"}],
   mech:"Founders kept the platform; the engine stayed free",
-  body:"Apache Spark was created at UC Berkeley and donated to the Apache Foundation. The same researchers founded Databricks and built a managed platform on top. Databricks closed a round at a $134 billion valuation in February 2026 on a $5.4 billion revenue run-rate, and was reportedly in talks to raise at $165 to $175 billion in mid-2026. The compute engine is still free; the platform that operates it is one of the most valuable private companies on earth.",
-  out:"$134B (Feb 2026). Reported talks at $165\u2013175B; IPO expected."},
+  body:"Apache Spark was created at UC Berkeley and donated to the Apache Foundation. The same researchers founded Databricks and built a managed platform on top. Databricks raised at a $134 billion valuation in a round announced in December 2025, then closed $5 billion at a $190 billion post-money valuation in August 2026, above a $7 billion revenue run-rate. The compute engine is still free; the platform that operates it is one of the most valuable private companies on earth.",
+  out:"$190B (Aug 2026), up from $134B (Dec 2025). IPO pushed to 2027 or later."},
 
- {id:"kafka", t:"Apache Kafka \u2192 Confluent", dir:"ascent", dom:"data", open:"SOFTWARE", yr:"2011\u201321", val:"IPO", vc:"green",
-  chain:[{l:"Apache Kafka",s:"built at LinkedIn",k:"open"},{l:"Confluent",s:"streaming platform",k:"captured"}],
+ {id:"kafka", t:"Apache Kafka \u2192 Confluent \u2192 IBM", dir:"ascent", dom:"data", open:"SOFTWARE", yr:"2011\u201326", val:"$11B", vc:"blue",
+  chain:[{l:"Apache Kafka",s:"built at LinkedIn",k:"open"},{l:"Confluent",s:"streaming platform, IPO 2021",k:"mid"},{l:"IBM",s:"acquired ~$11B, 2026",k:"captured"}],
   mech:"The creators commercialized the operational layer",
-  body:"Kafka was built inside LinkedIn to move event streams at scale, then open sourced. Its creators left to start Confluent, which sells the managed, secured, governed version of the same open project. Confluent went public in 2021. The pattern repeats: the protocol is free, but running it reliably at enterprise scale is a business.",
-  out:"IPO 2021."},
+  body:"Kafka was built inside LinkedIn to move event streams at scale, then open sourced. Its creators left to start Confluent, which sells the managed, secured, governed version of the same open project. Confluent went public in 2021, and IBM bought it for about $11 billion in cash, closing in March 2026, after Red Hat, HashiCorp and DataStax. The pattern repeats: the protocol is free, running it reliably at enterprise scale is a business, and that business ends up inside a larger vendor.",
+  out:"IPO 2021. Acquired by IBM for ~$11B, Mar 2026."},
 
  {id:"lucene", t:"Apache Lucene \u2192 Elasticsearch \u2192 Elastic", dir:"ascent", dom:"data", open:"SOFTWARE", yr:"1999\u201318", val:"IPO", vc:"green",
   chain:[{l:"Lucene",s:"search library",k:"open"},{l:"Elasticsearch",s:"distributed search",k:"mid"},{l:"Elastic",s:"public company",k:"captured"}],
@@ -571,7 +571,7 @@ const DATA = [
 
  {id:"hadoop", t:"Hadoop \u2192 Cloudera / Hortonworks", dir:"ascent", dom:"data", open:"SOFTWARE", yr:"2006\u201321", val:"merged", vc:"muted",
   chain:[{l:"Hadoop",s:"from Google's papers",k:"open"},{l:"Cloudera / Hortonworks",s:"big-data unicorns",k:"mid"},{l:"Value evaporated",s:"cloud + Spark won",k:"captured"}],
-  mech:"Cautionary: the substrate moved out from under them",
+  mech:"Cautionary: the foundation moved out from under them",
   body:"Hadoop implemented Google's published file-system and MapReduce ideas, and Cloudera and Hortonworks were the celebrated big-data unicorns of the 2010s. Then cloud object storage and Spark made the architecture obsolete. The two rivals merged in 2019 and Cloudera went private in 2021. Riding an open foundation is not enough if the foundation itself shifts.",
   out:"Merged 2019. A warning about durability, not just adoption."},
 
@@ -584,7 +584,7 @@ const DATA = [
  {id:"postgres", t:"PostgreSQL \u2192 the cloud", dir:"ascent", dom:"data", open:"SOFTWARE", yr:"1996\u2192", val:"cloud", vc:"muted",
   chain:[{l:"PostgreSQL",s:"permissive, ownerless",k:"open"},{l:"Aurora, RDS, Neon, Supabase",s:"managed services",k:"captured"}],
   mech:"No corporate owner means the operators capture everything",
-  body:"PostgreSQL has no single company behind it and a permissive license. That openness means no one can pull it back, and it also means the value flows entirely to whoever operates it at scale. Amazon Aurora and RDS, plus startups like Neon and Supabase, built large businesses on a database that nobody owns and everybody can take.",
+  body:"PostgreSQL has no single company behind it and a permissive license. That openness means no one can pull it back, and it also means the value flows entirely to whoever operates it at scale. Amazon Aurora and RDS, plus startups like Neon and Supabase, built large businesses on a database that nobody owns and everybody can take. The operators are now being absorbed in turn: Databricks bought Neon and Snowflake bought Crunchy Data, both in 2025.",
   out:"The clearest case of value flowing to operators, not creators."},
 
  {id:"redis", t:"Redis \u2192 Redis Inc.", dir:"ascent", dom:"data", open:"SOFTWARE", yr:"2009\u201325", val:"license war", vc:"muted",
@@ -592,6 +592,12 @@ const DATA = [
   mech:"Pull the license back, and the community forks around you",
   body:"Redis began as a permissively licensed project. As cloud providers resold it, Redis Inc. moved to restrictive licenses in 2024 to stop them. The community, with AWS, Google, and Oracle, forked Valkey under the Linux Foundation almost overnight. Redis returned to an open license in 2025. The episode showed that a company controlling a commons can lose it the moment the community decides it has overreached.",
   out:"Relicense 2024, triggered Valkey fork, reopened 2025."},
+
+ {id:"minio", t:"MinIO \u2192 AIStor", dir:"ascent", dom:"data", open:"SOFTWARE", yr:"2014\u201326", val:"closed successor", vc:"muted",
+  chain:[{l:"MinIO",s:"AGPL object store",k:"open"},{l:"Community edition",s:"maintenance, then archived",k:"mid"},{l:"AIStor",s:"proprietary successor",k:"captured"}],
+  mech:"Stop maintaining the open edition and sell the proprietary one",
+  body:"MinIO became the default S3-compatible object store for self-hosted AI and data pipelines under the AGPL. From 2025 the company moved the other way: it stripped management features from the community console, stopped publishing community binaries in October 2025, put the repository into maintenance mode that December and archived it in April 2026, pointing users to its proprietary AIStor. Unlike Redis or HashiCorp it did not relicense and wait for a fork; it stopped maintaining the open edition. Open alternatives such as Garage, SeaweedFS and RustFS are absorbing the self-hosted base.",
+  out:"Community edition archived April 2026; AIStor is the product."},
 
  {id:"nginx", t:"Nginx \u2192 F5", dir:"ascent", dom:"web", open:"SOFTWARE", yr:"2004\u201319", val:"$670M", vc:"blue",
   chain:[{l:"Nginx",s:"runs much of the web",k:"open"},{l:"Nginx Inc.",s:"Plus, enterprise",k:"mid"},{l:"F5 Networks",s:"acquired ~$670M",k:"captured"}],
@@ -638,7 +644,7 @@ const DATA = [
  {id:"webkit", t:"KHTML \u2192 WebKit \u2192 Safari & Chrome", dir:"ascent", dom:"web", open:"SOFTWARE", yr:"1998\u2192", val:"defaults", vc:"blue",
   chain:[{l:"KHTML",s:"KDE open source",k:"open"},{l:"WebKit",s:"Apple's engine",k:"mid"},{l:"Safari & early Chrome",s:"default browsers",k:"captured"}],
   mech:"An open engine became the default surface of the web",
-  body:"The KHTML engine from the KDE project became Apple's WebKit, which powered Safari and the first versions of Google Chrome before Google forked Blink. A small open-source rendering engine became the substrate beneath the two browsers that mediate most of the world's web traffic, and the value lives in the defaults, not the engine.",
+  body:"The KHTML engine from the KDE project became Apple's WebKit, which powered Safari and the first versions of Google Chrome before Google forked Blink. A small open-source rendering engine became the engine beneath the two browsers that mediate most of the world's web traffic, and the value lives in the defaults, not the engine.",
   out:"Powers Safari; seeded Chrome before the Blink fork."},
 
  {id:"wordpress", t:"WordPress \u2192 Automattic", dir:"ascent", dom:"web", open:"SOFTWARE", yr:"2003\u2192", val:"$7.5B", vc:"blue",
@@ -691,15 +697,15 @@ const DATA = [
 
  // ---------------- seeding ----------------
  {id:"vscode", t:"Microsoft \u2192 VS Code \u2192 Cursor \u2192 SpaceX", dir:"seeding", dom:"devtools", open:"SOFTWARE", yr:"2015\u201326", val:"$60B", vc:"blue",
-  chain:[{l:"VS Code",s:"Microsoft, MIT license",k:"open"},{l:"Cursor",s:"forked into an AI editor",k:"mid"},{l:"SpaceX",s:"agreed to acquire Anysphere",k:"captured"}],
+  chain:[{l:"VS Code",s:"Microsoft, MIT license",k:"open"},{l:"Cursor",s:"forked into an AI editor",k:"mid"},{l:"SpaceX",s:"acquired Anysphere, 2026",k:"captured"}],
   mech:"Give away the editor; the fork becomes a $60B company",
-  body:"Microsoft open sourced VS Code to win developer mindshare and funnel it toward GitHub, Azure, and Copilot. Anysphere forked that free editor into Cursor, reached roughly $2 billion in annual recurring revenue in about three years, and on June 16, 2026 SpaceX agreed to acquire Anysphere for $60 billion in an all-stock deal, expected to close in the third quarter of 2026 pending regulatory approval. The thing Microsoft gave away seeded one of the largest software acquisitions ever.",
-  out:"SpaceX agreed to acquire for $60B (Jun 2026); close expected Q3 2026."},
+  body:"Microsoft open sourced VS Code to win developer mindshare and funnel it toward GitHub, Azure, and Copilot. Anysphere forked that free editor into Cursor, reached roughly $2 billion in annual recurring revenue in about three years, and SpaceX agreed on June 16, 2026 to acquire Anysphere for $60 billion in an all-stock deal that closed on August 14, 2026. The thing Microsoft gave away seeded one of the largest software acquisitions ever.",
+  out:"Acquired by SpaceX for $60B; agreed Jun 2026, closed Aug 2026."},
 
  {id:"windsurf", t:"Microsoft \u2192 VS Code \u2192 Windsurf \u2192 split", dir:"seeding", dom:"devtools", open:"SOFTWARE", yr:"2015\u201326", val:"~$250M", vc:"muted",
   chain:[{l:"VS Code",s:"the same free editor",k:"open"},{l:"Windsurf",s:"Codeium's AI fork",k:"mid"},{l:"Google + Cognition",s:"talent, then the husk",k:"captured"}],
   mech:"Same foundation, opposite outcome to Cursor",
-  body:"Windsurf was another VS Code fork. A reported $3 billion OpenAI acquisition collapsed; Google then took the founders and a technology license for about $2.4 billion, and Cognition (maker of Devin) bought what remained of the company for around $250 million in December 2025, later folding it into Devin Desktop. Two companies built on the identical free foundation, one heading toward $60 billion and one dismembered across three buyers. The foundation does not decide the outcome.",
+  body:"Windsurf was another VS Code fork. A reported $3 billion OpenAI acquisition collapsed; Google then took the founders and a technology license for about $2.4 billion, and Cognition (maker of Devin) signed to buy what remained of the company in July 2025, at a price later reported around $250 million, and has since folded it into Devin Desktop. Two companies built on the identical free foundation, one sold for $60 billion and one dismembered across three buyers. The foundation does not decide the outcome.",
   out:"OpenAI deal collapsed; Google ~$2.4B for talent; Cognition ~$250M."},
 
  {id:"typescript", t:"Microsoft \u2192 TypeScript \u2192 the JS world", dir:"seeding", dom:"devtools", open:"SOFTWARE", yr:"2012\u2192", val:"standard", vc:"green",
@@ -716,7 +722,7 @@ const DATA = [
 
  {id:"k8s", t:"Google \u2192 Kubernetes \u2192 cloud-native", dir:"seeding", dom:"devtools", open:"SOFTWARE", yr:"2014\u2192", val:"the standard", vc:"blue",
   chain:[{l:"Kubernetes",s:"distilled from Borg",k:"open"},{l:"OpenShift, Rancher, EKS/AKS/GKE",s:"managed everywhere",k:"mid"},{l:"The whole CNCF",s:"an industry standard",k:"captured"}],
-  mech:"Open the orchestration layer to pull workloads toward cloud",
+  mech:"Open-source container orchestration to pull workloads toward cloud",
   body:"Google open sourced Kubernetes in 2014, distilled from its internal Borg system, to commoditize container orchestration and slow AWS's lead. It seeded Red Hat OpenShift, Rancher under SUSE, every hyperscaler's managed service, and the entire CNCF ecosystem. By making orchestration a free standard, Google ensured no rival could own it, and that workloads stayed portable toward Google Cloud.",
   out:"The default way the industry runs containers."},
 
@@ -762,11 +768,11 @@ const DATA = [
   body:"React Native let teams build iOS and Android apps from a single JavaScript codebase, and it underpins many consumer apps plus a tooling ecosystem led by Expo. The same move as React, applied to mobile: commoditize the build layer and standardize the world around your approach.",
   out:"A widely used cross-platform mobile standard."},
 
- {id:"pytorch", t:"Meta \u2192 PyTorch \u2192 every AI lab", dir:"seeding", dom:"ai", open:"SOFTWARE", yr:"2016\u2192", val:"the substrate", vc:"blue",
+ {id:"pytorch", t:"Meta \u2192 PyTorch \u2192 every AI lab", dir:"seeding", dom:"ai", open:"SOFTWARE", yr:"2016\u2192", val:"the foundation", vc:"blue",
   chain:[{l:"PyTorch",s:"open, now Linux Foundation",k:"open"},{l:"Training runs everywhere",s:"the default framework",k:"mid"},{l:"OpenAI, Anthropic & all labs",s:"build on it",k:"captured"}],
-  mech:"Commoditize the AI substrate so no vendor can charge rent",
-  body:"PyTorch is the framework nearly every frontier lab trains on, OpenAI and Anthropic included, and Meta donated it to the Linux Foundation in 2022. By making the substrate of the entire AI boom free and neutral, Meta ensured it would never depend on a competitor's framework and that the field would standardize on its tools. The most important software of the AI era is something Meta deliberately does not own alone.",
-  out:"The training substrate beneath essentially every frontier model."},
+  mech:"Commoditize the AI training framework so no vendor can charge rent",
+  body:"PyTorch is the framework nearly every frontier lab trains on, OpenAI and Anthropic included, and Meta donated it to the Linux Foundation in 2022. By making the framework underneath the entire AI boom free and neutral, Meta ensured it would never depend on a competitor's framework and that the field would standardize on its tools. The most important software of the AI era is something Meta deliberately does not own alone.",
+  out:"The training framework beneath essentially every frontier model."},
 
  {id:"llama", t:"Meta \u2192 Llama \u2192 Mistral & the serving layer", dir:"seeding", dom:"ai", open:"WEIGHTS", yr:"2023\u2192", val:"\u20ac11.7B", vc:"blue",
   chain:[{l:"Llama",s:"open model weights",k:"open"},{l:"Fine-tunes, serving, apps",s:"Together, Fireworks, Groq, Perplexity",k:"mid"},{l:"Mistral",s:"a European AI champion",k:"captured"}],
@@ -777,8 +783,8 @@ const DATA = [
  {id:"meta-other", t:"Meta \u2192 Cassandra, GraphQL, RocksDB \u2192 vendors", dir:"seeding", dom:"data", open:"SOFTWARE", yr:"2008\u2192", val:"multiple", vc:"green",
   chain:[{l:"Cassandra, GraphQL, RocksDB",s:"out of Facebook",k:"open"},{l:"DataStax, Apollo, embedded everywhere",s:"outside businesses",k:"captured"}],
   mech:"Internal tools released, external companies formed",
-  body:"A steady stream of open source out of Facebook seeded businesses elsewhere: Cassandra became DataStax, GraphQL became Apollo, and RocksDB sits quietly inside countless databases. Releasing internal infrastructure recruits contributors, sets standards, and hands the commercialization to others.",
-  out:"Seeded DataStax, Apollo, and a generation of storage engines."},
+  body:"A steady stream of open source out of Facebook seeded businesses elsewhere: Cassandra became DataStax (acquired by IBM in 2025), GraphQL became Apollo, and RocksDB sits quietly inside countless databases. Releasing internal infrastructure recruits contributors, sets standards, and hands the commercialization to others.",
+  out:"Seeded DataStax (now IBM), Apollo, and a generation of storage engines."},
 
  {id:"aws-taker", t:"Amazon \u2192 the great taker \u2192 managed services", dir:"seeding", dom:"data", open:"OPERATOR", yr:"2006\u2192", val:"the inversion", vc:"blue",
   chain:[{l:"Other people's open source",s:"Postgres, Redis, Elasticsearch, Kafka",k:"open"},{l:"AWS operates it at scale",s:"managed services",k:"mid"},{l:"One of history's great franchises",s:"capture without creation",k:"captured"}],
@@ -793,7 +799,7 @@ const CHOKE = [
  {n:"Layer 03", h:"Network effects", d:"GitHub, Hugging Face, and Coinbase win because everyone's code, models, or coins live in one place. The graph is the moat, not the protocol."},
  {n:"Layer 04", h:"Scale & operations", d:"Running open software reliably at planetary scale is its own product. Red Hat, Databricks, and AWS sell the operation, not the bits."},
  {n:"Layer 05", h:"Trust & brand", d:"Enterprises pay for someone to call at 3am, an indemnity, and a logo their auditors recognize. Free code does not come with a throat to choke."},
- {n:"Layer 06", h:"Data & feedback", d:"The model substrate is free, so value moves to proprietary data and the usage loop. The weights commoditize; the data and the distribution do not."}
+ {n:"Layer 06", h:"Data & feedback", d:"The model itself is free, so value moves to proprietary data and the usage loop. The weights commoditize; the data and the distribution do not."}
 ];
 
 const STATS = [
